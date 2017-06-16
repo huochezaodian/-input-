@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<title>Document</title>
+<style>
+	@keyframes Twinkle {
+	    0% {
+		    opacity: 0;
+	    }
+	    100% {
+		    opacity: 1;
+	    }
+	}
+	.box{
+		margin: 100px;
+		display: inline-block;
+		position: relative;
+		height: 32px;
+		font-size: 16px;
+	}
+	.box span{
+		width: 20px;
+		height: 20px;
+		display: inline-block;
+		border: 1px solid black;
+		margin: 5px;
+		text-align: center;
+		float: left;
+		cursor: pointer;
+		line-height: 21px;
+	}
+	.box input{
+	    outline: none;
+	    border: none;
+	    position: absolute;
+	    height: 0;
+	    overflow: hidden;
+	    opacity: 0;
+	    z-index: -100;
+	    color: transparent;
+	}
+	.box input{
+		left: -1000px;
+	}
+	.box span.active{
+		border: 1px solid aqua;
+	}
+	.box span.active:after{
+		content: "|";
+		animation: Twinkle .5s infinite;
+		position: absolute;
+		transform: scaleY(.8);
+	}
+</style>
+</head>
+<body>
+	<div class="box">
+		<input type="text">
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+	</div>
+<script>
+	window.onload = function(){
+		const div = document.querySelector('.box');
+		const spans = div.querySelectorAll('span');
+		const input = div.querySelector('input');
+		let activeIndex = 0;
+
+		[].forEach.call(spans, (obj, idx) => {
+			obj.onclick = function(){
+				this.innerText = '';
+				activeIndex = idx;
+				change(activeIndex);
+				input.focus();
+			};
+		});
+
+		input.onkeydown = function(e){
+			
+			let k = String.fromCharCode(e.keyCode);
+
+			if(/\d/.test(k)){
+		        spans[activeIndex].innerText = k;
+		        activeIndex++;
+				change(activeIndex);
+		    }else{
+		    	alert("请输入数字");
+		    }
+
+		    let p = '';
+		    [].forEach.call(spans, (el, i) => {
+				p += el.innerHTML;
+			});
+
+			if(p.length == 4){
+				input.blur();
+			}
+			
+		};
+		function change(index){
+			[].forEach.call(spans, (el, i) => {
+				el.className = '';
+			});
+
+			if(index == spans.length)return;
+			if(spans[index].innerHTML == ''){
+				spans[index].className = 'active';
+			}else{
+				activeIndex = index+1;
+				change(activeIndex);
+			}
+		}
+	};
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<title>Document</title>
+<style>
+	.box{
+		margin: 100px;
+		display: inline-block;
+	}
+	.box span{
+		width: 20px;
+		height: 20px;
+		display: inline-block;
+		border: 1px solid black;
+		margin: 5px;
+		text-align: center;
+	}
+</style>
+</head>
+<body>
+	<div class="box">
+		<span contenteditable="true"></span>
+		<span contenteditable="true"></span>
+		<span contenteditable="true"></span>
+		<span contenteditable="true"></span>
+	</div>
+<script>
+	window.onload = function(){
+		const div = document.querySelector('.box');
+		const spans = document.querySelectorAll('span');
+		let activeIndex=0;
+		let passWord=[];
+		spans[0].focus();
+	    div.addEventListener('keypress',function(e){
+	        if(e.target.tagName.toLowerCase()=='span'){
+	        	e.preventDefault();
+	        	if(e.target.innerHTML.length==0&&e.keyCode!=8){
+        		    var k=String.fromCharCode(e.charCode);
+        		    if(/\d/.test(k)){
+        		        passWord.push(k);
+        		        e.target.innerHTML = k;
+	    				spans[activeIndex].blur();
+    		     	    go(++activeIndex);
+        		    }else{
+        		    	e.target.innerHTML = '';
+        		    }
+	        	}
+	        }
+	    });
+	    [].forEach.call(spans,(e,i)=>{
+	    	e.onclick = function(){
+
+	    		activeIndex = i;
+	    		this.innerHTML = '';
+	    	}
+	    });
+	    function go(index){
+	    	if(index == spans.length)return;
+	    	if(spans[index].innerHTML != ''){
+	    		spans[activeIndex].blur();
+	    		go(++activeIndex);
+	    	}else{
+	        	spans[index].focus();
+	    	}
+	    }
+	};
+</script>
+</body>
+</html>
